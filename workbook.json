@@ -30,12 +30,13 @@
             "name": "TagName",
             "label": "Tag Name",
             "type": 2,
-            "query": "Resources\r\n| where tags != '' and tags != '[]'\r\n| mvexpand tags\r\n| extend tagName = tostring(bag_keys(tags)[0])\r\n| distinct tagName\r\n| sort by tagName asc",
+            "query": "resourcecontainers\r\n| where type == \"microsoft.resources/subscriptions\"\r\n| where tags != '' and tags != '[]'\r\n| mvexpand tags\r\n| extend tagName = tostring(bag_keys(tags)[0])\r\n| distinct tagName\r\n| sort by tagName asc",
             "crossComponentResources": [
               "value::tenant"
             ],
             "typeSettings": {
-              "additionalResourceOptions": []
+              "additionalResourceOptions": [],
+              "showDefault": false
             },
             "timeContext": {
               "durationMs": 86400000
@@ -66,12 +67,13 @@
             "name": "TagValue",
             "label": "Tag Value",
             "type": 2,
-            "query": "Resources\r\n| extend TagValue = tostring(tags.{TagName})\r\n| project TagValue\r\n| distinct TagValue",
+            "query": "resourcecontainers\r\n| where tags != '' and tags != '[]'\r\n| extend TagValue = tostring(tags.{TagName})\r\n| project TagValue\r\n| distinct TagValue",
             "crossComponentResources": [
               "value::tenant"
             ],
             "typeSettings": {
-              "additionalResourceOptions": []
+              "additionalResourceOptions": [],
+              "showDefault": false
             },
             "timeContext": {
               "durationMs": 86400000
@@ -82,6 +84,7 @@
           }
         ],
         "style": "formVertical",
+        "doNotRunWhenHidden": true,
         "queryType": 1,
         "resourceType": "microsoft.resources/tenants"
       },
@@ -152,7 +155,7 @@
     }
   ],
   "fallbackResourceIds": [
-    "Azure Monitor"
+    "azure monitor"
   ],
   "$schema": "https://github.com/Microsoft/Application-Insights-Workbooks/blob/master/schema/workbook.json"
 }
